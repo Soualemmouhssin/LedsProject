@@ -14,7 +14,7 @@ CRGB leds_2[NUM_LEDS2];
 
 void sparkleTask();
 Scheduler runner;
-Task spark(20000, TASK_FOREVER, &sparkleTask); // task for sparkling every one hour
+Task spark(60000, TASK_FOREVER, &sparkleTask); // task for sparkling every one hour
 
 int sparkleDuration = 3000 ; // sparkle effect duration is 1  minute
 int sparklSpeed = 10 ;
@@ -28,22 +28,37 @@ void setup()
   FastLED.addLeds<WS2811, PIN1, GRB>(leds_1, NUM_LEDS1).setCorrection( TypicalLEDStrip );
   FastLED.addLeds<WS2811, PIN2, GRB>(leds_2, NUM_LEDS2).setCorrection( TypicalLEDStrip );
   LEDS.setBrightness(84);
- // runner.addTask(spark);
-  //spark.enable() ;
-  //runner.startNow();
+  runner.addTask(spark);
+  spark.enable() ;
+  runner.startNow();
   Serial.begin(115200) ;
+  randomSeed(25) ; 
 
 }
 
 
 void loop() {
-  //runner.execute();
+  runner.execute();
   //RunningLights(255, 255 , 255 , 200 , 2000) ;
-  sparkleTask();
-  RunningLights(255, 0, 255, 100, 5000 );
-  FadeInOut(0, 255, 0,  5000);
-  rainbowCycle( 20, 5000 ) ;
-  Strobe( 0, 0, 255, 3, 100, 500, 5000);
+  
+  switch (random(0,5)) {
+  case 0 :
+    RunningLights(255, 0, 255, 100, random(2000, 6000) );
+    break ;
+  case 1 : 
+    FadeInOut(0, 255, 0,  random(2000, 6000));
+    break ; 
+  case 2 : 
+    rainbowCycle( 20, random(2000, 6000) ) ;
+    break ;
+  case 3 : 
+    Strobe( 0, 0, 255, 3, 100, 500, random(2000, 6000));
+    break ;
+  case 4 : 
+    TwinkleRandom(3,50,100,random(2000, 6000)) ; 
+  break ; 
+  }
+
 }
 
 void sparkleTask() {

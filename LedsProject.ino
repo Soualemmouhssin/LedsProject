@@ -20,10 +20,10 @@ String colornames[10] ={"white","red","blue","green","yelow","cry","gold","viole
 #define NUM_LEDS1 7
 CRGB leds_1[NUM_LEDS1];
 #define PIN1 15
-
-#define NUM_LEDS2 7
-CRGB leds_2[NUM_LEDS2];
-#define PIN2 5
+//
+//#define NUM_LEDS2 7
+//CRGB leds_2[NUM_LEDS2];
+//#define PIN2 5
 
 #define defaultSparkleDuration 3 // default sparkling effect duration  in minutes 
 #define sparkledurationAdd 5 // position in EEPROM
@@ -70,11 +70,11 @@ unsigned long Now = 0 ;
 
 void setup()
 {
-
+EEPROM.begin(50);
    Serial.begin(115200) ;
   getConfig() ;
   FastLED.addLeds<WS2812, PIN1, GRB>(leds_1, NUM_LEDS1);
-  FastLED.addLeds<WS2812, PIN2, GRB>(leds_2, NUM_LEDS2);
+//  FastLED.addLeds<WS2812, PIN2, GRB>(leds_2, NUM_LEDS2);
   LEDS.setBrightness(P_Bright);
  // for (int k =  0 ; k<10 ; k++) {Serial.println( "colotr " + colornames[k]) ; setAll(colors[k][0], colors[k][1], colors[k][2], 1, NUM_LEDS1); delay(2000); }
    byte randomColor = random(0,10) ;
@@ -127,17 +127,17 @@ void sparkleTask() {
   int delayDuration = (-5*sparklSpeed) +505 ; 
   setAll(0, 0, 0, 1, NUM_LEDS1) ;
   Serial.println("Spatkle delay " + String(delayDuration) + " speed " + String(sparklSpeed)) ; 
-  setAll(0, 0, 0, 2, NUM_LEDS2) ;
+  setAll(0, 0, 0, 1, NUM_LEDS1) ;
   while (millis() - Now < 60000) {
     //Entropy.Initialize();
     if (readCode()) {
       LEDS.setBrightness(sparkleBright*25);
       delayDuration = (-5*sparklSpeed) +505 ;
     }
-    int Pixel =  random(NUM_LEDS2);
-    setPixel(Pixel, 0xFF, 0xFF, 0xFF, 2);
+    int Pixel =  random(NUM_LEDS1);
+    setPixel(Pixel, 0xFF, 0xFF, 0xFF, 1);
     delay(delayDuration);
-    setPixel(Pixel, 0, 0, 0, 2);
+    setPixel(Pixel, 0, 0, 0, 1);
   }
 }
 
@@ -148,11 +148,11 @@ void setPixel(int Pixel, byte red, byte green, byte blue, byte strip) {
     leds_1[Pixel].g = green;
     leds_1[Pixel].b = blue;
   }
-  else {
-    leds_2[Pixel].r = red;
-    leds_2[Pixel].g = green;
-    leds_2[Pixel].b = blue;
-  }
+//  else {
+//    leds_2[Pixel].r = red;
+//    leds_2[Pixel].g = green;
+//    leds_2[Pixel].b = blue;
+//  }
   FastLED.show();
 }
 
@@ -167,8 +167,8 @@ void setAll(byte red, byte green, byte blue, byte strip, int numleds ) {
 // configuration saved in EEPROM
 void getConfig() { 
   // check if device is previously configured
-  for (byte  i = 0  ; i<4 ; i++) {
-    if(char(EEPROM.read(i)) != 77){
+  for (int  i = 0  ; i<4 ; i++) {
+    if(EEPROM.read(i) != 77){
       Serial.println("device not configured inserting default values") ; 
       EEPROM.write(sparkledurationAdd,defaultSparkleDuration );
       EEPROM.write(ModeAdd,defaultPrimaryMode);
@@ -179,7 +179,8 @@ void getConfig() {
       EEPROM.write(brigfhtAdd,defaultBright );
       EEPROM.write(P_brigfhtAdd,P_defaultBright );
       EEPROM.write(EventsColAdd,EventsColDefault );
-       for (byte  b = 0  ; i<4 ; i++) EEPROM.write(i,77);
+       for (int  b = 0  ; b<4 ; b++) EEPROM.write(b,77);
+       EEPROM.commit();
 
       return ; 
     }
@@ -218,6 +219,7 @@ bool readCode() {
       if (btdata.substring(1).toInt() >=0 && btdata.substring(2).toInt() <= 100) {
         Serial.println ("settign sparkling speed to " + btdata.substring(2)) ; 
         EEPROM.write(SpeedAdd, btdata.substring(2).toInt()) ; 
+        EEPROM.commit();
         sparklSpeed = btdata.substring(2).toInt();
         return 1 ;
       }
@@ -227,6 +229,7 @@ bool readCode() {
       if (btdata.substring(1).toInt() >=0 && btdata.substring(2).toInt() <= 100) {
         Serial.println ("settign sparkling brightness to " + btdata.substring(2)) ; 
         EEPROM.write(brigfhtAdd, btdata.substring(2).toInt()) ; 
+        EEPROM.commit();
         sparkleBright = btdata.substring(2).toInt();
         return 1 ;
       }
@@ -237,6 +240,7 @@ bool readCode() {
         Serial.println ("settign primary system brightness to " + btdata.substring(2)) ; 
         EEPROM.write(P_brigfhtAdd, btdata.substring(2).toInt()) ; 
         P_Bright = btdata.substring(2).toInt();
+        EEPROM.commit();
         return 1 ;
       }
     }
@@ -246,15 +250,18 @@ bool readCode() {
         if (btdata.substring(2,3).toInt() == 0) {
           Serial.println("Setting events mode") ; 
           EEPROM.write(ModeAdd,0 );
+          EEPROM.commit();
           primaryMode = 0 ;
         }
         else if (btdata.substring(2,3).toInt() == 1) {
           Serial.println("Setting Normal mode") ; 
           EEPROM.write(ModeAdd,1 );
+          EEPROM.commit();
           primaryMode = 1 ;
         }
           if (btdata.substring(3).toInt() >= 0 && btdata.substring(3).toInt() <= 10) {
             EEPROM.write(EventsColAdd,btdata.substring(3).toInt());
+            EEPROM.commit();
             EventsCol = btdata.substring(3).toInt(); 
             Serial.println("setting color to "  + colornames[EventsCol]);
           }

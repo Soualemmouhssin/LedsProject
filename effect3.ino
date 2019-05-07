@@ -8,7 +8,7 @@ void rainbowCycle(int SpeedDelay, int duration ) {
     for(i=0; i< NUM_LEDS1; i++) {
       runner.execute();
       c=Wheel(((i * 256 / NUM_LEDS1) + j) & 255);
-      setPixel(i, *c, *(c+1), *(c+2),1);
+      setPixel(i, *c, *(c+1), *(c+2));
     }
     delay(SpeedDelay);
   }

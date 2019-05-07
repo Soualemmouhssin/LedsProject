@@ -7,7 +7,7 @@ void RunningLights(byte red, byte green, byte blue, int WaveDelay, int duration 
   for(int j=0; j<NUM_LEDS1*2; j++)
       {   runner.execute();
           if (readCode() == 1) {
-            LEDS.setBrightness(P_Bright);
+            strip.setBrightness(P_Bright);
             if (primaryMode == 0 ){
              red == colors[EventsCol][0] ; 
               blue == colors[EventsCol][2] ;
@@ -17,7 +17,7 @@ void RunningLights(byte red, byte green, byte blue, int WaveDelay, int duration 
           for(int i=0; i<NUM_LEDS1; i++) {
             setPixel(i,((sin(i+Position) * 127 + 128)/255)*red,
                        ((sin(i+Position) * 127 + 128)/255)*green,
-                       ((sin(i+Position) * 127 + 128)/255)*blue, 1 );
+                       ((sin(i+Position) * 127 + 128)/255)*blue );
           }
           delay(WaveDelay);
       }

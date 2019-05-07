@@ -7,7 +7,7 @@ void FadeInOut(byte red, byte green, byte blue, int duration){
   while(millis() - Now < duration) { 
     runner.execute();
     if (readCode() == 1) {
-            LEDS.setBrightness(P_Bright);
+            strip.setBrightness(P_Bright);
             if (primaryMode == 0 ){
              red == colors[EventsCol][0] ; 
               blue == colors[EventsCol][2] ;
@@ -17,15 +17,16 @@ void FadeInOut(byte red, byte green, byte blue, int duration){
     r = (k/255.0)*red;
     g = (k/255.0)*green;
     b = (k/255.0)*blue;
-    setAll(r,g,b,1,NUM_LEDS1);
+    setAll(r,g,b,NUM_LEDS1);
   }
      
   for(int k = 255; k >= 0; k=k-2) {
     r = (k/255.0)*red;
     g = (k/255.0)*green;
     b = (k/255.0)*blue;
-    setAll(r,g,b,1,NUM_LEDS1);
+    setAll(r,g,b,NUM_LEDS1);
   }
+  Serial.println("new cycle");
   }
 }
 

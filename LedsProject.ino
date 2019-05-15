@@ -88,7 +88,12 @@ void setup()
  // for (int k =  0 ; k<10 ; k++) {Serial.println( "colotr " + colornames[k]) ; setAll(colors[k][0], colors[k][1], colors[k][2], 1, NUM_LEDS1); delay(2000); }
    byte randomColor = random(0,10) ;
   Serial.println("selected color " + colornames[randomColor]); 
-   FadeInOut(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2],  random(2000, 6000));
+   FadeInOut(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2],  random(2000, 6000));CylonBounce(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2], bounceSize, 10, 500,random(2000, 6000));  
+    Strobe( colors[randomColor][0], colors[randomColor][1], colors[randomColor][2], 3, 100, 500, random(2000, 6000));
+    TwinkleRandom(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2],random(2000, 6000)) ; 
+  RunningLights(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2],10, random(2000, 6000) );
+      CylonBounce(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2], bounceSize, 10, 500,random(2000, 6000)); ;
+
   runner.addTask(spark);
   spark.enable() ;
   runner.startNow();

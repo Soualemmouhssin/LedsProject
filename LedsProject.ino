@@ -25,6 +25,8 @@ String colornames[10] ={"white","red","blue","green","yelow","cry","gold","viole
 //CRGB leds_2[NUM_LEDS2];
 //#define PIN2 5
 
+#define bounceSize 3
+
 #define defaultSparkleDuration 3 // default sparkling effect duration  in minutes 
 #define sparkledurationAdd 5 // position in EEPROM
 byte sparkleDuration = defaultSparkleDuration; // sparkle effect duration in minutes
@@ -68,7 +70,7 @@ Task spark(300000, TASK_FOREVER, &sparkleTask); // task for sparkling every one 
 uint16_t Position = 0;
 unsigned long Now = 0 ;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS1, PIN1, NEO_GRBW + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS1, PIN1, NEO_GRB + NEO_KHZ800);
 
 
 void setup()
@@ -114,7 +116,7 @@ void loop() {
     FadeInOut(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2],  random(2000, 6000));
     break ; 
   case 2 : 
-    rainbowCycle( 10, random(2000, 6000) ) ;
+    CylonBounce(colors[randomColor][0], colors[randomColor][1], colors[randomColor][2], bounceSize, 10, 500,random(2000, 6000)); ;
     break ;
   case 3 : 
     Strobe( colors[randomColor][0], colors[randomColor][1], colors[randomColor][2], 3, 100, 500, random(2000, 6000));
@@ -151,14 +153,14 @@ void sparkleTask() {
 
 void setPixel(int Pixel, byte red, byte green, byte blue) {
    // RgbwColor col(red, green, blue, 31);
-    strip.setPixelColor(Pixel, red, green, blue,255);
+    strip.setPixelColor(Pixel, red, green, blue);
   strip.show();
 }
 
 void setAll(byte red, byte green, byte blue, int numleds ) {
 //  RgbwColor col(red, green, blue, 31);
   for (int i = 0; i < numleds; i++ ) {
-    strip.setPixelColor(i, red, green, blue,255);
+    strip.setPixelColor(i, red, green, blue);
   }
   strip.show();
 }

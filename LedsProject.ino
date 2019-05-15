@@ -70,7 +70,7 @@ Task spark(300000, TASK_FOREVER, &sparkleTask); // task for sparkling every one 
 uint16_t Position = 0;
 unsigned long Now = 0 ;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS1, PIN1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS1, PIN1, NEO_GRBW + NEO_KHZ800);
 
 
 void setup()
@@ -158,14 +158,14 @@ void sparkleTask() {
 
 void setPixel(int Pixel, byte red, byte green, byte blue) {
    // RgbwColor col(red, green, blue, 31);
-    strip.setPixelColor(Pixel, red, green, blue);
+    strip.setPixelColor(Pixel, red, green, blue,0);
   strip.show();
 }
 
 void setAll(byte red, byte green, byte blue, int numleds ) {
 //  RgbwColor col(red, green, blue, 31);
   for (int i = 0; i < numleds; i++ ) {
-    strip.setPixelColor(i, red, green, blue);
+    strip.setPixelColor(i, red, green, blue, 0);
   }
   strip.show();
 }
